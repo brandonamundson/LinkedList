@@ -194,7 +194,7 @@ bool LinkList::incrementFrequency(string word)
 }
 
 /**************************************************************************/ /**
- * @author Samuel Patzer
+ * @author Brandon Amundson
  *
  * @par Description:
  * This function print the list out to an output file provided by the user.
@@ -303,7 +303,7 @@ bool LinkList::insert(string word)
 }
 
 /** 
-* @author Cody Ortega
+* @author Brandon Amundson
 * 
 * @par Description: 
 * checks to see if the list is empty by checking to see if headptr is nullptr
