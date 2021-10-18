@@ -53,23 +53,31 @@ bool LinkList::remove(string word)
 	node* temp = headptr;
 	node* prev = headptr;
 
-	while (temp != nullptr)
+	while (temp != nullptr) // while in list
 	{
-		if (temp->word == word)
+		if (temp->word == word) // if temp word is word
 		{
-			if (temp == headptr)
+			if (temp == headptr) // if temp is head
 			{
-				delete headptr;
+				if (temp->next != nullptr) // if head is not only element
+				{
+					headptr = temp->next; // reassign head
+					delete temp; // delete temp
+				}
+				else // make list empty
+				{
+					delete headptr; // delete head
+				}
+				return true;
 			}
-			else
-			{
-				prev->next = temp->next;
-				delete temp;
-			}
+			prev->next = temp->next; // else, point prev to temp next node
+			delete temp; // delete temp
+			return true;
 		}
-		prev = temp;
-		temp = temp->next;
+		prev = temp; // make current(temp) previous and 
+		temp = temp->next; // current (temp), next
 	}
+	return false; // unable to find/remove
 }
 
 
@@ -200,7 +208,7 @@ void LinkList::print(ostream &out)
 	node* temp = headptr; // start at head
 	int max = getMaxFrequency(); // get highest frequency first
 	bool header = true; // start by printing header
-	int count = size(); // count all nodes in list
+	int count = 0; // count words across, 4 across, then down
 
 	while (max != 0) // while words in list
 	{
@@ -209,7 +217,7 @@ void LinkList::print(ostream &out)
 		{
 			if (temp->frequencyCount == max) // if at max frequency count
 			{
-				if (header) // if header is true, print it
+				if (header) // if header is needed, print it
 				{
 					out << "\n******************************" <<
 						"****************************" << endl <<
@@ -218,65 +226,72 @@ void LinkList::print(ostream &out)
 						"*******************************" << endl;
 					header = false; // do not continue to print header
 				}
-				if (count == 3)
+				if (count == 3) // if at end of line
 				{
-					out << temp->word << endl;
-					count = 0;
+					out << temp->word << endl; // output word and end line
+					count = 0; // reset count
 				}
-				else
+				else // otherwise output word and a tabspace
 				{
-					out << temp->word << "\t";
+					out << temp->word << "     ";
 					count++;
 				}
 			}
-			temp = temp->next;
+			temp = temp->next; // move to next node
 		}
-		max--;
+		temp = headptr; // reset temp to beginning of list
+		count = 0; // reset count
+		max--; // decrease max frequency and check list again until at zero
 	}
 }
 
-/**************************************************************************/
 /** 
-* @author Cody Ortega
+* @author Brandon Amundson
 * 
 * @par Description: 
-* insert word one into the list at ascending value and in the same nod gives 
-* it a frequency count that will be used later in a different function. 
-* 
-* 
-* @param[in]      word - word that will be inserted into the lsit
+* insert word one into the list alphabetical order and in the same node attach
+* frequency count
+*  
+* @param[in] word - word that will be inserted into the list
 * 
 * @returns true - if it inserted the words
 * @return  false - if it could not insert the words
-* 
 *****************************************************************************/
 bool LinkList::insert(string word)
 {
 	node* temp = headptr;
-	node* prev = nullptr;
+	node* prev = headptr;
 	node* new_node = nullptr;
 
 	new_node = new(nothrow) node; // new node that will go into the list
-	if (new_node == nullptr)
+	if (new_node == nullptr) // if new node not allocated, assigns nullptr
 	{
-		return false;
+		return false; // returns false unable to insert
 	}
 
-	new_node->word = word;
+	if (find(word)) // check if word is in list already
+	{
+		return incrementFrequency(word);
+		// if it is increment frequency and return
+		// should return true if incremented, false if not found-> error state
+	}
+	new_node->word = word; //create new node data
 	new_node->frequencyCount = 1;
 	new_node->next = nullptr;
 
-	if (headptr == nullptr)
+	if (headptr == nullptr) // if inserting at beginning
 	{
 		headptr = new_node;
 		return true;
 	}
+	// if word is before headptr alphabetically
 	if (new_node->word <= headptr->word)
 	{
-		new_node->next = headptr;
-		headptr = new_node;
-		return true;
+		new_node->next = headptr; // assign current headptr as new node next
+		headptr = new_node; // assign headptr to new node
+		return true; // return true
 	}
+	// while not at end of list and before alphabetical
 	while (temp != nullptr && temp->word <= new_node->word)
 	{
 		prev = temp;
@@ -287,18 +302,15 @@ bool LinkList::insert(string word)
 	return true;
 }
 
-/**************************************************************************/
 /** 
 * @author Cody Ortega
 * 
 * @par Description: 
-*
-* checks to see if the list is empty by checking to see if headptr is empty
+* checks to see if the list is empty by checking to see if headptr is nullptr
 * 
 * 
 * @returns true - if the list is empty
 * @returns false - If the list is not empty
-* 
 *****************************************************************************/
 bool LinkList::isEmpty()
 {

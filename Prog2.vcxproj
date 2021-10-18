@@ -79,7 +79,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="linklist.cpp" />
-    <ClCompile Include="prog1.cpp" />
+    <ClCompile Include="prog2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="linklist.h" />
