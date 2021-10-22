@@ -219,7 +219,7 @@ bool LinkList::incrementFrequency(string word)
  * This function print the list out to an output file provided by the user.
  * It also formats and adds headers to each frequency to easily read the list.
  *
- * @param[in, out]     out - the output file provided by the user
+ * @param[in,out]     out - the output file provided by the user
  *
  *****************************************************************************/
 void LinkList::print(ostream &out)
@@ -357,4 +357,48 @@ bool LinkList::isEmpty()
 	if (headptr == nullptr)
 		return true;
 	return false;
+}
+
+/**************************************************************************/ /**
+ * @author Brandon Amundson
+ *
+ * @par Description:
+ * This function prints the first item in list to an output stream provided by
+ * the user. It also formats and adds headers to each frequency to easily read
+ * the list.
+ *
+ * @param[in,out]     out - the output file provided by the user
+ *****************************************************************************/
+void LinkList::top(ostream &out)
+{
+	if (headptr == nullptr)
+	{
+		out << "List is empty!" << endl;
+		return;
+	}
+	out << "Item at the beginning of the list is: " << headptr->word;
+	out << "\nFrequency Count is: " << headptr->frequencyCount;
+	out << endl;
+}
+
+/**************************************************************************/ /**
+ * @author Brandon Amundson
+ *
+ * @par Description:
+ * This function prints the last item in list to an output stream provided by
+ * the user. It also formats and adds headers to each frequency to easily read
+ * the list.
+ *
+ * @param[in,out]     out - the output file provided by the user
+ *****************************************************************************/
+void LinkList::back(ostream &out)
+{
+	if (headptr == nullptr)
+	{
+		out << "List is empty!" << endl;
+		return;
+	}
+	out << "Item at the end of the list is: " << tailptr->word;
+	out << "\nFrequency Count is: " << tailptr->frequencyCount;
+	out << endl;
 }

@@ -122,8 +122,8 @@ int main(int argc, char* argv[])
  * This function opens files
  *
  * @param[in]      argv - array of characters containing the file names
- * @param[out]     fin - input file provided by the user
- * @param[out]     fout - output file provided by the user
+ * @param[in,out]  fin - input file provided by the user
+ * @param[in,out]  fout - output file provided by the user
  *
  * @returns true if the files are successfully opened 
  * @returns false if the files are not successfully opened

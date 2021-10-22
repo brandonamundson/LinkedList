@@ -69,8 +69,16 @@ public:
 
 	/*!< The print function of the LinkedList prints out the words in the list
 	     in order of decreasing frequency.
-	     @param out this is the file it will print to*/
+	     @param out this is the output stream it will print to*/
 	void print(ostream &out);
+
+	/*!< The top function of the LinkedList prints out the first word in the list
+	     @param out this is the output stream it will print to*/
+	void top(ostream &out);
+
+	/*!< The print function of the LinkedList prints out the last word in the list
+	     @param out this is the output stream it will print to*/
+	void back(ostream &out);
 
 private:
 	/*!
