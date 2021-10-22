@@ -7,7 +7,7 @@
  *
  * @author Brandon Amundson 
  * 
- * @date 10/17/2021
+ * @date 10/21/2021
  * 
  * @par Professor: 
  *         Doug Perez
@@ -37,7 +37,7 @@
    @verbatim  
    c:\> prog1.exe  input.txt output.txt
                    input.txt - a short story or paragraph
-                   output.txt - an ouput text that gives the frequency of a word
+                   output.txt - an output text that gives the frequency of a word
    @endverbatim 
  *
  * @section todo_bugs_modification_section Todo, Bugs, and Modifications
@@ -51,6 +51,7 @@
    Mar 17, 2015  Second workday
    Mar 24, 2015  Third workday
    Oct 17, 2021  Numerous modifications and improvements made
+   Oct 21, 2021  Made into Doubly Linked List
    @endverbatim
  *
  *****************************************************************************/

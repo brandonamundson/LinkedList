@@ -14,6 +14,7 @@
 LinkList::LinkList()
 {
 	headptr = nullptr;
+	tailptr = nullptr;
 }
 
 /**************************************************************************/ /**
@@ -35,7 +36,7 @@ LinkList::~LinkList()
 	}
 }
 
-/**
+/**************************************************************************/ /**
 * @author Brandon Amundson
 *
 * @par Description:
@@ -51,7 +52,13 @@ LinkList::~LinkList()
 bool LinkList::remove(string word)
 {
 	node* temp = headptr;
-	node* prev = headptr;
+
+	// if list is empty
+	if (temp == nullptr)
+	{
+		// nothing to delete, return true
+		return true;
+	}
 
 	while (temp != nullptr) // while in list
 	{
@@ -62,26 +69,38 @@ bool LinkList::remove(string word)
 				if (temp->next != nullptr) // if head is not only element
 				{
 					headptr = temp->next; // reassign head
+					// ensure that the next node's prev is null
+					headptr->prev = nullptr;
 					delete temp; // delete temp
 				}
-				else // make list empty
+				else // otherwise only one item in list, empty list
 				{
 					delete headptr; // delete head
+					delete tailptr; // delete tail
 				}
 				return true;
 			}
-			prev->next = temp->next; // else, point prev to temp next node
-			delete temp; // delete temp
-			return true;
+			if (temp == tailptr) // if temp is tail
+			{
+				tailptr = temp->prev; // reassign tailptr to prev node
+				tailptr->next = nullptr; // reassign temp->prev->next to null
+				delete temp; // delete temp
+			}
+			else // removing in middle
+			{
+				temp->prev->next = temp->next;
+				temp->next->prev = temp->prev;
+				delete temp;
+				return true;
+			}
 		}
-		prev = temp; // make current(temp) previous and 
-		temp = temp->next; // current (temp), next
+		temp = temp->next; // move current (temp), to next
 	}
-	return false; // unable to find/remove
+	return false; // unable to find/remove, list likely empty
 }
 
 
-/**
+/**************************************************************************/ /**
 * @author Brandon Amundson
 *
 * @par Description:
@@ -245,7 +264,7 @@ void LinkList::print(ostream &out)
 	}
 }
 
-/** 
+/**************************************************************************/ /**
 * @author Brandon Amundson
 * 
 * @par Description: 
@@ -260,7 +279,6 @@ void LinkList::print(ostream &out)
 bool LinkList::insert(string word)
 {
 	node* temp = headptr;
-	node* prev = headptr;
 	node* new_node = nullptr;
 
 	new_node = new(nothrow) node; // new node that will go into the list
@@ -271,38 +289,60 @@ bool LinkList::insert(string word)
 
 	if (find(word)) // check if word is in list already
 	{
-		return incrementFrequency(word);
 		// if it is increment frequency and return
 		// should return true if incremented, false if not found-> error state
+		return incrementFrequency(word);
 	}
+
 	new_node->word = word; //create new node data
 	new_node->frequencyCount = 1;
 	new_node->next = nullptr;
+	new_node->prev = nullptr;
 
-	if (headptr == nullptr) // if inserting at beginning
+	// if inserting in empty
+	if (headptr == nullptr)
 	{
 		headptr = new_node;
+		tailptr = new_node;
 		return true;
 	}
-	// if word is before headptr alphabetically
+	// if inserting at beginning
 	if (new_node->word <= headptr->word)
 	{
 		new_node->next = headptr; // assign current headptr as new node next
 		headptr = new_node; // assign headptr to new node
 		return true; // return true
 	}
-	// while not at end of list and before alphabetical
-	while (temp != nullptr && temp->word <= new_node->word)
+	// if inserting at end
+	if (tailptr->word <= new_node->word)
 	{
-		prev = temp;
-		temp = temp->next;
+		new_node->prev = tailptr;
+		tailptr = new_node;
 	}
-	new_node->next = temp;
-	prev->next = new_node;
-	return true;
+
+	else // we must be inserting in middle
+	{
+		// while not at end of list and new node is before current node
+		// and while not off the list somehow...
+		while (new_node->word <= temp->word && temp != nullptr)
+		{
+			temp = temp->next; // move temp to the next node
+
+			if (temp == nullptr) // if this were to ever occur for any reason
+			{
+				return false; // do not try to insert
+			}
+		}
+		// once temp is larger than new node, new node will go before it
+		new_node->next = temp; // new node next is now temp
+		new_node->prev = temp->prev; // new node prev is now temp's prev
+		temp->prev = new_node; // temp's prev is now new node
+		return true; // we have now inserted into list, return
+	}
+	return false;
 }
 
-/** 
+/**************************************************************************/ /**
 * @author Brandon Amundson
 * 
 * @par Description: 

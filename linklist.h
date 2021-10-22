@@ -2,6 +2,7 @@
  * @file
  *****************************************************************************/
 
+#pragma once
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -11,9 +12,9 @@
 using namespace std;
 
 
-/**
-* @brief This class is a linked list that contains a string, frequency and the
-         next word in the list.  The List is composed of words read in from a
+/**************************************************************************/ /**
+* @brief This class is a linked list that contains a string, frequency and both the
+         previous and next word in the list.  The List is composed of words read in from a
          short story input as a text file and is used to document the frequency
          of every list in the text file.
 */
@@ -81,9 +82,11 @@ private:
 		int frequencyCount; /*!< Frequency count */
 		string word = ""; /*!< Word of the node */
 		node* next = nullptr; /*!< Next word in the list*/
+		node* prev = nullptr; /*!< Previous word in the list*/
 	};
 
 	/*!< First node in the list.  This allows access to other nodes in list*/
 	node* headptr;
+	node* tailptr;
 };
 #endif
