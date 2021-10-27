@@ -52,13 +52,14 @@
    Mar 24, 2015  Third workday
    Oct 17, 2021  Numerous modifications and improvements made
    Oct 21, 2021  Made into Doubly Linked List
+   Oct 26, 2021  Added Functionality to open default files
    @endverbatim
  *
  *****************************************************************************/
 
 #include "linklist.h"
 
-bool openFiles(char* argv[], ifstream &fin, ofstream &fout);
+bool openFiles(int argc, char* argv[], ifstream &fin, ofstream &fout);
 string removePunc(string temp);
 
 /**************************************************************************/ /**
@@ -89,29 +90,21 @@ int main(int argc, char* argv[])
 	ofstream fout; //output stream
 	LinkList list; //linked list
 	string temp; //temp string read in from file
-	if (argc == 3)
+	if (openFiles(argc, argv, fin, fout)) //if opened all files
 	{
-		if (openFiles(argv, fin, fout)) //if opened all files
+		while (fin >> temp) //while reading in from input file
 		{
-			while (fin >> temp) //while reading in from input file
+			temp = removePunc(temp); //remove punctuation
+			if (!list.incrementFrequency(temp))
+				//increment temp, if unable to
 			{
-				temp = removePunc(temp); //remove punctuation
-				if (!list.incrementFrequency(temp))
-					//increment temp, if unable to
-				{
-					list.insert(temp); //if not able to increment, insert
-				}
+				list.insert(temp); //if not able to increment, insert
 			}
-			list.print(fout); // print list when done inserting
 		}
-		else
-			return 2; // unable to open files
+		list.print(fout); // print list when done inserting
 	}
-	else //invalid number of arguments
-	{
-		cout << "Invalid number of commands" << endl;
-		return 1;
-	}
+	else
+		return 2; // unable to open files
 	return 0;
 }
 
@@ -119,8 +112,10 @@ int main(int argc, char* argv[])
  * @author Brandon Amundson
  *
  * @par Description:
- * This function opens files
+ * This function opens files as requested, or by default depending on parameters
+ * passed in at execution time.
  *
+ * @param[in]	   argc - argument count of file execution
  * @param[in]      argv - array of characters containing the file names
  * @param[in,out]  fin - input file provided by the user
  * @param[in,out]  fout - output file provided by the user
@@ -128,18 +123,53 @@ int main(int argc, char* argv[])
  * @returns true if the files are successfully opened 
  * @returns false if the files are not successfully opened
  *****************************************************************************/
-bool openFiles(char* argv[], ifstream &fin, ofstream &fout)
+bool openFiles(int argc, char* argv[], ifstream &fin, ofstream &fout)
 {
-	fin.open(argv[1]);
-	if (!fin)
+	switch (argc)
 	{
-		cout << "Failed to open input file" << endl;
-		return false;
-	}
-	fout.open(argv[2]);
-	if (!fout)
-	{
-		cout << "Failed to open output file" << endl;
+	case 1:
+		fin.open("./ShortStory.txt");
+		if (!fin)
+		{
+			cout << "Failed to open input file" << endl;
+			return false;
+		}
+		fout.open("./Output.txt");
+		if (!fout)
+		{
+			cout << "Failed to open output file" << endl;
+			return false;
+		}
+		break;
+	case 2:
+		fin.open(argv[1]);
+		if (!fin)
+		{
+			cout << "Failed to open input file" << endl;
+			return false;
+		}
+		fout.open("./Output.txt");
+		if (!fout)
+		{
+			cout << "Failed to open output file" << endl;
+			return false;
+		}
+		break;
+	case 3:
+		fin.open(argv[1]);
+		if (!fin)
+		{
+			cout << "Failed to open input file" << endl;
+			return false;
+		}
+		fout.open(argv[2]);
+		if (!fout)
+		{
+			cout << "Failed to open output file" << endl;
+			return false;
+		}
+		break;
+	default:
 		return false;
 	}
 	return true;

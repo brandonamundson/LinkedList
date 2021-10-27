@@ -310,21 +310,27 @@ bool LinkList::insert(string word)
 	if (new_node->word <= headptr->word)
 	{
 		new_node->next = headptr; // assign current headptr as new node next
+		headptr->prev = new_node; // assign current headptr prev to newest node
 		headptr = new_node; // assign headptr to new node
 		return true; // return true
 	}
 	// if inserting at end
 	if (tailptr->word <= new_node->word)
 	{
-		new_node->prev = tailptr;
-		tailptr = new_node;
+		if (headptr == tailptr) // if head and tail are same
+		{
+			headptr->next = new_node; // head next needs to be new node
+		}
+		new_node->prev = tailptr; // new prev is now tail
+		tailptr->next = new_node; // tails next is new node
+		tailptr = new_node; // tail is now new
 	}
 
 	else // we must be inserting in middle
 	{
 		// while not at end of list and new node is before current node
 		// and while not off the list somehow...
-		while (new_node->word <= temp->word && temp != nullptr)
+		while (temp->word <= new_node->word && temp != nullptr)
 		{
 			temp = temp->next; // move temp to the next node
 
@@ -337,6 +343,7 @@ bool LinkList::insert(string word)
 		new_node->next = temp; // new node next is now temp
 		new_node->prev = temp->prev; // new node prev is now temp's prev
 		temp->prev = new_node; // temp's prev is now new node
+		new_node->prev->next = new_node; // the previous nodes next is new node
 		return true; // we have now inserted into list, return
 	}
 	return false;
