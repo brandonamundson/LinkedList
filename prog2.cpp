@@ -59,8 +59,8 @@
 
 #include "linklist.h"
 
-bool openFiles(int argc, char* argv[], ifstream &fin, ofstream &fout);
-string removePunc(string temp);
+bool openFiles(int argc, char* argv[], std::ifstream &fin, std::ofstream &fout);
+std::string removePunc(std::string temp);
 
 /**************************************************************************/ /**
  * @author Brandon Amundson
@@ -86,10 +86,10 @@ string removePunc(string temp);
  *****************************************************************************/
 int main(int argc, char* argv[])
 {
-	ifstream fin; //input stream
-	ofstream fout; //output stream
+	std::ifstream fin; //input stream
+	std::ofstream fout; //output stream
 	LinkList list; //linked list
-	string temp; //temp string read in from file
+	std::string temp; //temp string read in from file
 	if (openFiles(argc, argv, fin, fout)) //if opened all files
 	{
 		while (fin >> temp) //while reading in from input file
@@ -101,7 +101,18 @@ int main(int argc, char* argv[])
 				list.insert(temp); //if not able to increment, insert
 			}
 		}
-		list.print(fout); // print list when done inserting
+		list.frequencySort(); // sort list by frequency count
+
+		//print list to terminal after being sorted by frequency
+		list.print(std::cout);
+		system("pause"); // pause in between printouts
+
+		// sort list by words (technically inserted in this order)
+		list.mergeSort();
+		list.print(std::cout); // print list by word order
+
+		// print list by frequency count to file when done inserting
+		list.printFreqCount(fout);
 	}
 	else
 		return 2; // unable to open files
@@ -123,7 +134,7 @@ int main(int argc, char* argv[])
  * @returns true if the files are successfully opened 
  * @returns false if the files are not successfully opened
  *****************************************************************************/
-bool openFiles(int argc, char* argv[], ifstream &fin, ofstream &fout)
+bool openFiles(int argc, char* argv[], std::ifstream &fin, std::ofstream &fout)
 {
 	switch (argc)
 	{
@@ -131,13 +142,13 @@ bool openFiles(int argc, char* argv[], ifstream &fin, ofstream &fout)
 		fin.open("./ShortStory.txt");
 		if (!fin)
 		{
-			cout << "Failed to open input file" << endl;
+			std::cout << "Failed to open input file" << std::endl;
 			return false;
 		}
 		fout.open("./Output.txt");
 		if (!fout)
 		{
-			cout << "Failed to open output file" << endl;
+			std::cout << "Failed to open output file" << std::endl;
 			return false;
 		}
 		break;
@@ -145,13 +156,13 @@ bool openFiles(int argc, char* argv[], ifstream &fin, ofstream &fout)
 		fin.open(argv[1]);
 		if (!fin)
 		{
-			cout << "Failed to open input file" << endl;
+			std::cout << "Failed to open input file" << std::endl;
 			return false;
 		}
 		fout.open("./Output.txt");
 		if (!fout)
 		{
-			cout << "Failed to open output file" << endl;
+			std::cout << "Failed to open output file" << std::endl;
 			return false;
 		}
 		break;
@@ -159,13 +170,13 @@ bool openFiles(int argc, char* argv[], ifstream &fin, ofstream &fout)
 		fin.open(argv[1]);
 		if (!fin)
 		{
-			cout << "Failed to open input file" << endl;
+			std::cout << "Failed to open input file" << std::endl;
 			return false;
 		}
 		fout.open(argv[2]);
 		if (!fout)
 		{
-			cout << "Failed to open output file" << endl;
+			std::cout << "Failed to open output file" << std::endl;
 			return false;
 		}
 		break;
@@ -186,7 +197,7 @@ bool openFiles(int argc, char* argv[], ifstream &fin, ofstream &fout)
  *
  * @returns a string containing no punctuation.
  *****************************************************************************/
-string removePunc(string temp)
+std::string removePunc(std::string temp)
 {
 	int size = temp.size();
 
