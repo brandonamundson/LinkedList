@@ -53,6 +53,7 @@
    Oct 17, 2021  Numerous modifications and improvements made
    Oct 21, 2021  Made into Doubly Linked List
    Oct 26, 2021  Added Functionality to open default files
+   Nov 12, 2021	 Added sorting methods and documentation for them
    @endverbatim
  *
  *****************************************************************************/
